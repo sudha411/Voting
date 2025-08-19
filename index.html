@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voting Application</title>
+  <style>
+    /* Global Styling */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #74ebd5, #ACB6E5);
+      color: #333;
+    }
+    header {
+      background: #222;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      background: #444;
+    }
+    nav button {
+      padding: 12px 20px;
+      margin: 5px;
+      background: #f1f1f1;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+    nav button:hover {
+      background: #00c3ff;
+      color: white;
+    }
+    .page {
+      display: none;
+      padding: 30px;
+      text-align: center;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+    .active {
+      display: block;
+    }
+    /* Candidate Card */
+    .candidates {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
+      width: 220px;
+      transition: transform 0.3s;
+    }
+    .card:hover {
+      transform: scale(1.05);
+    }
+    .card h3 {
+      margin-bottom: 10px;
+    }
+    .vote-btn {
+      background: #28a745;
+      border: none;
+      padding: 10px 18px;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+    .vote-btn:hover {
+      background: #218838;
+    }
+    .results {
+      font-size: 20px;
+      margin-top: 20px;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+  </style>
+</head>
+<body>
+  <header>🗳 Voting Application</header>
+  <nav>
+    <button onclick="navigate('votingPage')">Voting Page</button>
+    <button onclick="navigate('resultsPage')">Results Page</button>
+  </nav>
+
+  <!-- Voting Page -->
+  <div id="votingPage" class="page active">
+    <h2>Cast Your Vote</h2>
+    <div class="candidates">
+      <div class="card">
+        <h3>Candidate A</h3>
+        <p>Votes: <span id="votesA">0</span></p>
+        <button class="vote-btn" onclick="vote('A')">Vote</button>
+      </div>
+      <div class="card">
+        <h3>Candidate B</h3>
+        <p>Votes: <span id="votesB">0</span></p>
+        <button class="vote-btn" onclick="vote('B')">Vote</button>
+      </div>
+      <div class="card">
+        <h3>Candidate C</h3>
+        <p>Votes: <span id="votesC">0</span></p>
+        <button class="vote-btn" onclick="vote('C')">Vote</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results Page -->
+  <div id="resultsPage" class="page">
+    <h2>Voting Results</h2>
+    <div class="results">
+      <p>Candidate A: <span id="resultA">0</span> votes</p>
+      <p>Candidate B: <span id="resultB">0</span> votes</p>
+      <p>Candidate C: <span id="resultC">0</span> votes</p>
+      <h3>🏆 Leading Candidate: <span id="leading">None</span></h3>
+    </div>
+  </div>
+
+  <script>
+    // Global vote counts (Shared State)
+    const votes = { A: 0, B: 0, C: 0 };
+
+    // Handle voting
+    function vote(candidate) {
+      votes[candidate]++;
+      document.getElementById("votesA").textContent = votes.A;
+      document.getElementById("votesB").textContent = votes.B;
+      document.getElementById("votesC").textContent = votes.C;
+      updateResults();
+    }
+
+    // Update results dynamically
+    function updateResults() {
+      document.getElementById("resultA").textContent = votes.A;
+      document.getElementById("resultB").textContent = votes.B;
+      document.getElementById("resultC").textContent = votes.C;
+
+      const maxVotes = Math.max(votes.A, votes.B, votes.C);
+      let leader = "None";
+      if (maxVotes > 0) {
+        leader = Object.keys(votes).find(key => votes[key] === maxVotes);
+        leader = "Candidate " + leader;
+      }
+      document.getElementById("leading").textContent = leader;
+    }
+
+    // Navigation between "pages"
+    function navigate(pageId) {
+      document.querySelectorAll(".page").forEach(page => page.classList.remove("active"));
+      document.getElementById(pageId).classList.add("active");
+    }
+  </script>
+</body>
+</html>
+
